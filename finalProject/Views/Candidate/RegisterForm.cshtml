@@ -1,0 +1,48 @@
+﻿@model finalProject.Models.Candidate
+
+@{
+    ViewBag.Title = "RegisterForm";
+}
+
+<h2>RegisterForm</h2>
+
+<br />
+<div class="container">
+    <form action="submit" method="post">
+        <table>
+            <tr>
+                <td>enter id: </td>
+                <td><input id="id" name="txtIdEnter" type="text" value="@Model.Id" /></td>
+            </tr>
+            <tr>
+                <td>enter FirstName:</td>
+                <td><input id="FirstName" name="txtFirstName" type="text" value="@Model.firstName" /></td>
+            </tr>
+            <tr>
+                <td>enter LastName:</td>
+                <td><input id="LastName" name="txtLastName" type="text" value="@Model.lastName" /></td>
+            </tr>
+            <tr>
+                <td>enter Gander:</td>
+                <td><input id="gander" name="txtGander" type="text" value="@Model.gander" /></td>
+            </tr>
+            <tr>
+                <td>enter BirthDay</td>
+                <td><input id="birthday" name="txtBirthDay" type="date" /></td>
+            </tr>
+            <tr>
+                <td>enter Email:</td>
+                <td><input id="email" name="txtEmail" type="email" value="@Model.email" /></td>
+            </tr>
+            <tr>
+                <td>enter Job Title:</td>
+                <td><input id="job" name="txtJobTitle" type="text" value="@Model.jobTitle" /></td>
+            </tr>
+        </table>
+        <input id="enter" type="submit" value="submit" />
+        @{ if (Model.Id != null)
+            { @Model.Id @:is taken you can chack the status instad
+        }
+        }
+    </form>
+</div>

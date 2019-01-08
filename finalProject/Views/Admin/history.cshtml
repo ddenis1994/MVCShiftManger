@@ -1,0 +1,42 @@
+﻿<body onload="loadDates2()">
+    <div id="weekWorkerSelect" class="container">
+    </div>
+    <br />
+    <button type="submit" id="getWorkerShifts">chack shifts</button>
+    <br />
+    <div id="loadedData" ></div>
+    <p id="tempload" style="color:red"></p>
+
+    <script>
+    function loadDates2() {
+        document.getElementById("tempload").innerHTML ="loading data from server"
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("weekWorkerSelect").innerHTML =
+                    this.responseText;
+                document.getElementById("tempload").innerHTML = ""
+            }
+        };
+        xhttp.open("POST", "@Url.Action("getdates", "Admin")", true);
+        xhttp.send();
+    }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#getWorkerShifts").click(function () {
+                document.getElementById("tempload").innerHTML = "loading data from server"
+                $.post("@Url.Action("getWorkerShifts", "Admin")", {
+                    selected: $("#selectdWeek option:selected").text()
+                },
+                    function (data, status) {
+                        document.getElementById("loadedData").innerHTML = data;
+                        document.getElementById("tempload").innerHTML = ""
+                    });
+            });
+        });
+    </script>
+
+
+</body>

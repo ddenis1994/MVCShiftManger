@@ -1,0 +1,42 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col">
+            <ul class="nav nav-tabs flex-column" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true" )">Submission of shifts</a><br />
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">shifts history</a><br />
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">my profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="new" aria-selected="false">add new Worker</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="all-tub" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">see all working stuff</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="scuduale-tab" data-toggle="tab" href="#scudoale" role="tab" aria-controls="scudoale" aria-selected="false">make next week scuduale</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col">
+            <div class="tab-content">
+                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">@Html.Partial("ShiftForm") </div>
+                <div class="tab-pane" id="history" role="tabpanel" aria-labelledby="history-tab">@Html.Partial("history")</div>
+                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">@Html.Partial("profile")</div>
+                <div class="tab-pane" id="new" role="tabpanel" aria-labelledby="new-tab"></div>
+                <div class="tab-pane" id="all" role="tabpanel" aria-labelledby="all-tub">workimg stuff</div>
+                <div class="tab-pane" id="scudoale" role="tabpanel" aria-labelledby="scuduale-tab">@Html.Partial("shiftsForNextWeek")</div>
+
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $('#myTab li:last-child a').tab('show')
+            })
+        </script>
+    </div>
+</div>

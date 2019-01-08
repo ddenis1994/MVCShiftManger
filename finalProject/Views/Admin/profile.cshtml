@@ -1,0 +1,30 @@
+﻿@model finalProject.Models.User
+
+<div>
+    <table class="table">
+        <tr>
+            <td>first name</td>
+            <td>@Session["FirstName"]</td>
+        </tr>
+        <tr>
+            <td>last Name</td>
+            <td>@Session["LastName"]</td>
+        </tr>
+        <tr>
+            <td>id</td>
+            <td>@Session["id"]</td>
+        </tr>
+        <tr>
+            <td>job Title</td>
+            <td>@Session["jobTitle"]</td>
+        </tr>
+        <tr>
+            <td>birthday</td>
+            <td>@Session["birtday"]</td>
+        </tr>
+        <tr>
+            <td>start of work</td>
+            <td>@Session["startWork"]</td>
+        </tr>
+    </table>
+</div>

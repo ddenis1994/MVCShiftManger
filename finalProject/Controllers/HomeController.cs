@@ -1,16 +1,82 @@
-﻿using System;
+﻿using finalProject.Dal;
+using finalProject.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using finalProject.ModelBinder;
 
 namespace finalProject.Controllers
 {
     public class HomeController : Controller
     {
+        [RequireHttps]
         public ActionResult Index()
         {
             return View();
+        }
+        [HttpPost]
+        public ActionResult AutorizeUser([ModelBinder(typeof(LoginModelBinder))] User obj)
+        {
+            if ((obj.username!=null) && obj.password!=null)
+            {
+                LogInDal dal = new LogInDal();
+                List<User> users =
+                    (from x in dal.users
+                     where x.username.Equals(obj.username) && x.password.Equals(obj.password)
+                     select x).ToList<User>();
+                if (users.Count == 0)
+                {
+                    obj.logInErorMassege = "wrong user name or password";
+                    return View("signin", obj);
+                }
+                else
+                {
+                    Session["userId"] = users[0].userId;
+                    Session["username"] = obj.username;
+                    Session["id"] = users[0].Id;
+                    Session["FirstName"] = users[0].FirstName;
+                    Session["LastName"] = users[0].LastName;
+                    Session["jobTitle"] = users[0].jobTitle;
+                    Session["startWork"] = users[0].startWork.Date;
+                    Session["birtday"] = users[0].birtday.Date;
+
+                    roleDal rDal = new roleDal();
+                    int ss = users[0].userId;
+                    List<roles> r =
+                    (from x in rDal.role
+                     where x.userid.Equals(ss)
+                     select x).ToList<roles>();
+
+                    if (r.Count > 0)
+                    {
+                        Session["role"] = r[0].role;
+                        if (r[0].role == "admin")
+                            return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                        Session["role"] = "";
+
+                    return RedirectToAction("Index", "Worker");
+                }
+            }
+            else {
+                obj = new User();
+                obj.logInErorMassege = "cannot pass argument";
+                return View("signin", obj);
+                    }
+        }
+
+        public ActionResult workerZone()
+        {
+             if (Session["id"] != null) {
+                if (Session["role"].ToString() == "admin")
+                    return RedirectToAction("Index", "Admin");
+                return RedirectToAction("index", "Worker");
+            }
+            User obj = new User();
+            return View("signin",obj);
         }
 
         public ActionResult About()
