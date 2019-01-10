@@ -12,7 +12,7 @@ namespace finalProject.ModelBinder
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             HttpContextBase objContex = controllerContext.HttpContext;
-            string idstring = objContex.Request.Form["txtIdEnter"];
+            int idstring = int.Parse(objContex.Request.Form["txtIdEnter"]);
             string firstNameString = objContex.Request.Form["txtFirstName"];
             string lastNameStrin = objContex.Request.Form["txtLastName"];
             string ganderstring = objContex.Request.Form["txtGander"];
@@ -26,11 +26,11 @@ namespace finalProject.ModelBinder
 
             Candidate obj = new Candidate()
             {
-                Id = idstring,
+                candidateId = idstring,
                 firstName = firstNameString,
                 lastName = lastNameStrin,
-                gander = ganderstring,
-                Birtday = birthDayString,
+                gander = char.Parse(ganderstring),
+                Birtday = DateTime.Parse(birthDayString.Day+"/"+birthDayString.Month+"/"+birthDayString.Year),
                 email = emailString,
                 jobTitle = jobString
 

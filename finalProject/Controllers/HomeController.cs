@@ -11,6 +11,7 @@ namespace finalProject.Controllers
 {
     public class HomeController : Controller
     {
+        private MainDal dal = new MainDal();
         [RequireHttps]
         public ActionResult Index()
         {
@@ -21,7 +22,6 @@ namespace finalProject.Controllers
         {
             if ((obj.username!=null) && obj.password!=null)
             {
-                LogInDal dal = new LogInDal();
                 List<User> users =
                     (from x in dal.users
                      where x.username.Equals(obj.username) && x.password.Equals(obj.password)
@@ -41,11 +41,11 @@ namespace finalProject.Controllers
                     Session["jobTitle"] = users[0].jobTitle;
                     Session["startWork"] = users[0].startWork.Date;
                     Session["birtday"] = users[0].birtday.Date;
+                    Session["salary"] = users[0].salary;
 
-                    roleDal rDal = new roleDal();
                     int ss = users[0].userId;
                     List<roles> r =
-                    (from x in rDal.role
+                    (from x in dal.roles
                      where x.userid.Equals(ss)
                      select x).ToList<roles>();
 
@@ -73,7 +73,7 @@ namespace finalProject.Controllers
              if (Session["id"] != null) {
                 if (Session["role"].ToString() == "admin")
                     return RedirectToAction("Index", "Admin");
-                return RedirectToAction("index", "Worker");
+                return RedirectToAction("Index", "Worker");
             }
             User obj = new User();
             return View("signin",obj);

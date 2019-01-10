@@ -22,6 +22,6 @@ namespace finalProject.Models
         public DateTime startWork { get; set; }
         public DateTime? EndWork { get; set; }
         public string jobTitle { get; set; }
-
+        public float salary { get; set; }
     }
 }

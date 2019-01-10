@@ -18,9 +18,11 @@ namespace finalProject.Models
         public string lastName { get; set; }
         [Key]
         [Required]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Required]
-        public string gander { get; set; }
+        public int candidateId { get; set; }
+        [Required]
+        public char gander { get; set; }
         [Required]
         public DateTime Birtday { get; set; }
         [Required]

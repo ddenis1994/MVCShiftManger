@@ -140,11 +140,7 @@
     <Compile Include="Controllers\CandidateController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
-    <Compile Include="Dal\CandidateDal.cs" />
-    <Compile Include="Dal\LogInDal.cs" />
-    <Compile Include="Dal\roleDal.cs" />
-    <Compile Include="Dal\ShiftDal.cs" />
-    <Compile Include="Dal\shiftsDalcs.cs" />
+    <Compile Include="Dal\MainDal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -152,6 +148,7 @@
     <Compile Include="ModelBinder\LoginModelBinder.cs" />
     <Compile Include="ModelBinder\ShiftBinder.cs" />
     <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\Job.cs" />
     <Compile Include="Models\optinsForweek.cs" />
     <Compile Include="Models\roles.cs" />
     <Compile Include="Models\shifts.cs" />
@@ -209,7 +206,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -233,23 +232,23 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\signin.cshtml" />
-    <Content Include="Views\Shared\loginManu.cshtml" />
-    <Content Include="Views\Worker\index.cshtml" />
-    <Content Include="Views\Worker\ShiftForm.cshtml" />
+    <Content Include="Views\Shared\_loginManu.cshtml" />
+    <Content Include="Views\Worker\_index.cshtml" />
+    <Content Include="Views\Worker\_ShiftForm.cshtml" />
     <Content Include="Views\Worker\optinsForShifts.cshtml" />
     <Content Include="Views\Worker\profile.cshtml" />
     <Content Include="Views\Worker\history.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\profile.cshtml" />
-    <Content Include="Views\Admin\history.cshtml" />
+    <Content Include="Views\Admin\_profile.cshtml" />
+    <Content Include="Views\Admin\_history.cshtml" />
     <Content Include="Views\Admin\optinsForShifts.cshtml" />
-    <Content Include="Views\Admin\ShiftForm.cshtml" />
+    <Content Include="Views\Admin\_ShiftForm.cshtml" />
     <Content Include="Views\Admin\shiftsForNextWeek.cshtml" />
-    <Content Include="Views\Candidate\CandidatePage.cshtml" />
-    <Content Include="Views\Candidate\ChackStatus.cshtml" />
-    <Content Include="Views\Candidate\newRegisterForm.cshtml" />
-    <Content Include="Views\Candidate\RegisterForm.cshtml" />
-    <Content Include="Views\Admin\addWorker.cshtml" />
+    <Content Include="Views\Candidate\_index.cshtml" />
+    <Content Include="Views\Candidate\_ChackStatus.cshtml" />
+    <Content Include="Views\Candidate\_RegisterForm.cshtml" />
+    <Content Include="Views\Admin\CandidatePage.cshtml" />
+    <Content Include="Views\Admin\_workersPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,9 +15,8 @@ namespace finalProject.ModelBinder
             HttpContextBase objcontex = controllerContext.HttpContext;
             string date = objcontex.Request.Form["date"];
             int userId = 0;
-            if (objcontex.Request.Form["userId"] != "") 
+            if (objcontex.Request.Form["userId"] != "" && objcontex.Request.Form["userId"] != null) 
                  userId = int.Parse(objcontex.Request.Form["userId"]);
-
 
             string su = objcontex.Request.Form["Sunday"];
             string mo = objcontex.Request.Form["Monday"];

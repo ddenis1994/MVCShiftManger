@@ -1,8 +1,8 @@
 ﻿<body onload="loadDates()">
-    <div id="weekWorkerSelect" class="container">
+    <div id="weekWorkerSelect" class="alert alert-primary">
     </div>
     <br />
-    <button type="submit" id="getWorkerShifts">chack shifts</button>
+    <button class="btn btn-primary" type="submit" id="getWorkerShifts">chack shifts</button>
     <br />
     <div id="loadedData" ></div>
     <p id="tempload" style="color:red"></p>
@@ -21,9 +21,7 @@
         xhttp.open("POST", "@Url.Action("getdates","Worker")", true);
         xhttp.send();
     }
-    </script>
-
-    <script>
+  
         $(document).ready(function () {
             $("#getWorkerShifts").click(function () {
                 document.getElementById("tempload").innerHTML = "loading data from server"

@@ -10,50 +10,58 @@ using System.Web.Mvc;
 
 namespace finalProject.Controllers
 {
-
-
     public class WorkerController : Controller
-
     {
-
-        public class cois
-        {
-            public string selected { get; set; }
-        }
-
+        //main dal
+        private MainDal dal = new MainDal();
         [HttpPost]
+        //method for creathing each worker shifts from history
         public ActionResult getWorkerShifts (string selected)
         {
-
-            ShiftDal dal = new ShiftDal();
             int id = (int)Session["userId"];
             int s = int.Parse(selected);
+
+            List<optinsForweek> realData = new List<optinsForweek>();
+
+            //first find the corract week
             List<shifts> result =
-                (from x in dal.shifts 
+                (from x in dal.WeekShifts 
                  where x.userId.Equals(id) && x.week.Equals(s)
                  select x).ToList<shifts>();
-
-
+            //if got any data on user
             if (result.Count > 0)
             {
-                shiftsDalcs k = new shiftsDalcs();
+
+                shifts week = new shifts()
+                {
+                    userId = result[0].shiftsId
+                };
+                //get the shift id
                 s = result[0].shiftsId;
+                //get all the shifts
                 List<shifts.shift> l=
-                    (from x in k.Shifts
+                    (from x in dal.Shifts1
                      where x.shiftsId.Equals(s) 
                      select x).ToList<shifts.shift>();
 
+                //creath the table for the user
                 string data = "<table class=\"table table-hover table - striped\">";
                 string temp="<tr>";
+                //put the shifts corractly
                 for (int i = 0; i < l.Count; i++)
                 {
                     DateTime dateTemp = DateTime.Parse(l[i].date);
                     temp = temp + "<td>" + dateTemp.ToString("dd/MM/yyyy") + "</td>";
                 }
+
                 data += temp+"</tr>";
                 temp = "<tr>";
+                week.shiftList = new List<shifts.shift>();
                 for (int i = 0; i < l.Count; i++)
+                {
+                    week.shiftList.Add(new shifts.shift() { shiftChose = l[i].shiftChose });
                     temp = temp + "<td>" + l[i].shiftChose + "</td>";
+                }
                 data += temp + "</tr></table>";
                 return Content(data);
 
@@ -62,15 +70,16 @@ namespace finalProject.Controllers
             return Content("cannot find any shifts for this week");
 
         }
+        //actino to find worker weeks of wor
+        [HttpPost]
         public ActionResult getdates()
         {
 
             //first need to get all dates
 
-            ShiftDal dal = new ShiftDal();
             int id = (int)Session["userId"];
             List<shifts> result =
-                (from x in dal.shifts
+                (from x in dal.WeekShifts
                  where x.userId.Equals(id)
                  select x).ToList<shifts>();
             string data="";
@@ -79,57 +88,65 @@ namespace finalProject.Controllers
                 string temp = "<option value=\"" + result[i].week + "\">"+ result[i].week+ "</option>";
                 data += temp;
             }
-            string lable = "<label> select week:  </label >";
-            string mainString = lable+ "<select id=\"selectdWeek\"  > " + data +"</select>";
+            string lable = "<span class=\"label label-default\">Select Week</span>";
+            string mainString = lable+ "<select id=\"selectdWeek\" class=\"form - control\" > " + data +"</select>";
 
             return Content(mainString);
         }
-
+        //adede chack if loged in
         public ActionResult Index()
         {
-            User obj2 = new User();
-            return View(obj2);
+            if (Session["id"] != null)
+            {
+                User obj2 = new User();
+                return View("_index", obj2);
+            }
+            return RedirectToAction("index", "home");
         }
         [HttpPost]
+        //added control only if loged in
         public ActionResult submitShifts([ModelBinder(typeof(ShiftBinder))] shifts obj)
         {
-
-
-            //chackif got this shift
-            if (ModelState.IsValid)
+            if (Session["id"] != null)
             {
-                ShiftDal dal = new ShiftDal();
-
-                List<shifts> result =
-                (from x in dal.shifts
-                 where x.startDate.Equals(obj.startDate) && x.userId.Equals(obj.userId)
-                 select x).ToList<shifts>();
-
-
-                if (result.Count == 0)
+                //chackif got this shift
+                if (ModelState.IsValid)
                 {
-                    dal.shifts.Add(obj);
-                    dal.SaveChanges();
-                }
-                else
-                {
-                    User obj2 = new User();
-                    obj2.logInErorMassege = "alredy submited for the week";
-                    return View("Index", obj2);
-                }
 
+                    List<shifts> result =
+                    (from x in dal.WeekShifts
+                     where x.startDate.Equals(obj.startDate) && x.userId.Equals(obj.userId)
+                     select x).ToList<shifts>();
+
+
+                    if (result.Count == 0)
+                    {
+                        dal.WeekShifts.Add(obj);
+                        dal.SaveChanges();
+                    }
+                    else
+                    {
+                        ViewBag.eror = "alredy submited for the week";
+                        return View("_Index");
+                    }
+                }
+                return RedirectToAction("Index");
             }
-
-            return RedirectToAction("Index"); 
+            return RedirectToAction("index", "home");
         }
         public ActionResult getTopManu()
         {
-            return View("loginManu");
+            return View("_loginManu");
         }
+        //added chach if loged in
         public ActionResult logout()
         {
-            Session.Clear();
+            if (Session["id"] != null)
+            {
+                Session.Clear();
+            }
             return RedirectToAction("Index", "Home");
+
         }
     }
 }

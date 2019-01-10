@@ -6,28 +6,45 @@ using System.Web;
 using System.Web.Mvc;
 using finalProject.Dal;
 using finalProject.ModelBinder;
+using Newtonsoft.Json;
 
 namespace finalProject.Controllers
 {
     public class CandidateController : Controller
     {
+        private MainDal dal = new MainDal();
+
+        [HttpGet]
+        //action for retiving all the available jobs
+        public ActionResult getCandidateJobes()
+        {
+            var job = (from x in dal.jobs
+                       select x).ToList<Job>();
+            return Content(JsonConvert.SerializeObject(job));
+        }
+        //main mction for return candidate index
         public ActionResult getCandidatePage()
         {
-            return View("CandidatePage");
+            return View("_index");
         }
+        //func for retriving the register form
         public ActionResult Register()
         {
             Candidate can = new Candidate();
-            can.Id = null;
-            return View("RegisterForm", can);
+            return View("_RegisterForm", can);
         }
+        [HttpPost]
+        //func for adding candidate
         public ActionResult submit([ModelBinder(typeof(CandidateBinder))]Candidate obj)
         {
-
             if (ModelState.IsValid)
             {
-                CandidateDal dal = new CandidateDal();
-                if (dal.Candidates.Find(obj.Id) == null)
+                //first chack id dandidate is in the system
+                List<Candidate> result= (from x in dal.Candidates
+                                         where x.candidateId.Equals(obj.candidateId)
+                                         select x).ToList<Candidate>();
+                //first chack to find if there are dnadidates with the same name
+                if (result.Count == 0)
                 {
                     obj.status = "new";
                     dal.Candidates.Add(obj);
@@ -35,33 +52,43 @@ namespace finalProject.Controllers
                 }
                 else
                 {
-                    return View("RegisterForm", obj);
+                    ViewBag.registerForm = "alredy has this id plz wait";
+                    return View("_RegisterForm");
                 }
 
             }
-
+            //if all is good
             return RedirectToAction("index", "Home"); ;
         }
+        //func for chaching candidate status
         public ActionResult ChackStatus()
         {
-            ViewBag.denis = "deni";
-            return View("ChackStatus");
+            return View("_ChackStatus");
         }
+        [HttpPost]
+        //finshid action for geting the view with candidate status
         public ActionResult getStatus()
         {
-            if (ModelState.IsValid)
+            //firest get the candidate string
+            string statusString = Request.Form["txtIdEnter"];
+            //only parse to int if the candidate sand id
+            if (statusString != "")
             {
-                CandidateDal dal = new CandidateDal();
-                if (dal.Candidates.Find(Request.Form["txtIdEnter"]) != null)
+                if (ModelState.IsValid)
                 {
-                    ViewBag.status = "your status is :" + dal.Candidates.Find(Request.Form["txtIdEnter"]).status;
-                    //todo find more sutibul way to pass the data corractrly
-                }
-                else
-                    ViewBag.status = "not exsists in data base";
-            }
+                    int find = int.Parse(statusString);
+                    List<Candidate> result= 
+                    (from x in dal.Candidates
+                    where x.candidateId.Equals(find)
+                    select x).ToList<Candidate>();
 
-            return View("ChackStatus");
+                    if (result.Count > 0)
+                        ViewBag.status = "your status is : " +result[0].status;
+                }
+            }
+            else
+                ViewBag.status = "not exsists in data base";
+            return View("_ChackStatus");
         }
     }
 }

@@ -8,7 +8,7 @@
                 </td>
                 <td>
                     <select class="custom-select" id="inputGroupSelect01" name="Sunday">
-                       @Html.Partial("optinsForShifts")
+                        @Html.Partial("optinsForShifts")
                     </select>
                 </td>
             </tr>
@@ -63,8 +63,31 @@
         </table>
         <input type="hidden" name="userId" value="@Session["userId"]" />
         <input type="hidden" name="date" value="@DateTime.Today" />
-        <input class="btn btn-primary" type="submit" value="Sand" />
+        <div>
+            <span class="input-group-text" id="basic-addon1">Total money :  <a id="weekchash"></a></span>
+            <button type="submit" class="btn btn-primary">
+                submit <span class="badge badge-light"></span>
+            </button>
+        </div>
+
 
     </form>
-    <p style="color:red">@Model.logInErorMassege</p>
+    <p style="color:red">@ViewBag.eror</p>
+
 </div>
+
+<script>
+    $('select').change(function () {
+        var sum = 0;
+        debugger;
+        $('select :selected').each(function () {
+
+            if ($(this).val() == "11-19" || $(this).val() == "v" || $(this).val() == "19cl") 
+                sum += 7;
+            else if ($(this).val() == "e")
+                sum += 4;
+        });
+        $("#weekchash").html(sum * @Session["salary"] );
+    });
+
+</script>

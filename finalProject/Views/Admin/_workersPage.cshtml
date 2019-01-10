@@ -1,0 +1,22 @@
+﻿@model List<finalProject.Models.User>
+    @{ 
+        WebGrid obj = new WebGrid(Model);
+    }
+@obj.GetHtml(tableStyle: "table table-hover table - striped",
+    htmlAttributes:  new { id = "allActiveWorkerTable" },
+    columns: obj.Columns(
+        obj.Column(columnName: "userId", header: "UserId"),
+        obj.Column( header: "name",format:@<text> @item.username @item.LastName </text>, canSort:false),
+        obj.Column(columnName: "gander", header: "Gander", canSort: false),
+        obj.Column(columnName: "birtday", header: "Birtday", canSort: false),
+        obj.Column(columnName: "startWork", header: "StartWork", canSort: false),
+        obj.Column(columnName: "jobTitle", header: "Job", canSort: false)
+    ));
+<script>
+    @*add some style for the table *@
+      $(document).ready(function () {
+        $("#allActiveWorkerTable thead tr:first").addClass('thead-dark');
+        });
+
+ 
+</script>

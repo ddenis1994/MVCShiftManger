@@ -1,0 +1,15 @@
+﻿<div>
+    <h2>Stastus</h2>
+    <div class="container">
+        <form action="getStatus" method="post">
+            <table class="table table-hover table-striped ">
+                <tr>
+                    <td>Enter your id</td>
+                    <td><input id="id" name="txtIdEnter" type="text" /></td>
+                </tr>
+            </table>
+            <input id="enter" type="submit" value="submit" />
+        </form>
+        @ViewBag.status
+    </div>
+</div>

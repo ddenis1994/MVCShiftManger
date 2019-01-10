@@ -1,0 +1,68 @@
+﻿@model finalProject.Models.Candidate
+
+@{
+    ViewBag.Title = "RegisterForm";
+}
+
+<h2>RegisterForm</h2>
+<p style="color:red" id="loadingRegisratorForm"></p>
+<br />
+<div class="container form-group">
+    <form class="" action="submit" method="post">
+        <div class="form-group">
+            <label for="id">ID </label>
+            <input class="form-control" id="id" name="txtIdEnter" type="number" placeholder="Enter Your ID" required />
+        </div>
+        <div class="form-group">
+            <label for="FirstName">First Name </label>
+            <input id="FirstName" name="txtFirstName" type="text" placeholder="Enter Your First name" required />
+        </div>
+        <div class="form-group">
+            <label for="LastName">Last name </label>
+            <input id="LastName" name="txtLastName" type="text" placeholder="Enter Your Last name" required />
+        </div>
+        <div class="form-group">
+            <label for="registerGander">select gander </label>
+
+            <select name="txtGander" id="registerGander" required>
+                <option>select</option>
+                <option value="M">Male</option>
+                <option value="F">Feamel</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="birthdayRegister">BitrhDay </label>
+            <input id="birthdayRegister" name="txtBirthDay" type="date" required />
+        </div>
+        <div class="form-group">
+            <label for="emailRegister">Email </label>
+            <input id="emailRegister" name="txtEmail" type="email" required />
+        </div>
+        <div class="form-group">
+            <label for="jobRegistart">select Job </label>
+            <select name="txtJobTitle" id="jobRegistart" required>
+                <option>select</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<p style="color:red">@ViewBag.registerForm </p>
+
+<script>
+    @* script for updating the job manu*@
+    $(document).ready(function () {
+        $("#loadingRegisratorForm").html("lodaing data from server plase wait");
+        $.getJSON("@Url.Action("getCandidateJobes", "Candidate")",
+            function (data) {
+                debugger;
+                $.each(data, function (key, value) {
+                    $("#jobRegistart").append($("<option></option>")
+                        .attr("value", value.job)
+                        .text(value.job));
+                });
+            });
+        $("#loadingRegisratorForm").html("");
+    });
+</script>
