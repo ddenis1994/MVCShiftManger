@@ -10,6 +10,9 @@ using System.Web.Helpers;
 using System.ComponentModel.DataAnnotations;
 using System.Collections;
 using System.Threading.Tasks;
+using System.Globalization;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 
 namespace finalProject.Controllers
 {
@@ -33,59 +36,107 @@ namespace finalProject.Controllers
             }
             return Content("");
         }
-        public ActionResult deleteCandidate(string id)
+        public async Task<ActionResult> DeleteCandidate(string id)
         {
-            if (Session["role"]!=null)
-            {
-                Candidate found = dal.Candidates.Find(id);
-                dal.Candidates.Remove(found);
-                dal.SaveChanges();
-                User obj = new User();
-                return View("index", obj);
-            }
-            return Content("");
-        }
-        [HttpPost]
-        public ActionResult updateCandidate(string id,string newStatus)
-        {
-            if (Session["role"] != null)
-            {
-                Candidate found = dal.Candidates.Find(id);
-                found.status = newStatus;
-                dal.SaveChanges();
-            }
+            await Task.Run(() => {
 
-            return View();
+                if (Session["role"] != null)
+                {
+                    int idCandidate = int.Parse(id);
+                    List<Candidate> found2 = (
+                    from x in dal.Candidates
+                    where x.candidateId.Equals(idCandidate)
+                    select x).ToList<Candidate>();
+                    dal.Candidates.Remove(found2[0]);
+                    dal.SaveChanges();
+                }
+            });
+            return Content("_index");
         }
         [HttpPost]
-        public async Task<ActionResult> HireCandidate(string id,string password)
+        public async Task<ActionResult> updateCandidate(string id,string newStatus)
         {
             await Task.Run(() =>
             {
                 if (Session["role"] != null)
                 {
-                    Candidate found = dal.Candidates.Find(int.Parse(id));
-                    DateTime today = new DateTime();
-                    User temp = new User()
-                    {
-                        userId = found.Id,
-                        birtday = found.Birtday,
-                        FirstName = found.firstName,
-                        password = password,
-                        startWork = DateTime.Parse(today.Day + "/" + today.Month + "/" + today.Year),
-                        LastName = found.lastName,
-                        gander = found.gander
-                    };
-                    dal.Candidates.Remove(found);
-                    dal.SaveChanges();
-                    dal.users.Add(temp);
+                    int idCandidate = int.Parse(id);
+                    List<Candidate> found2 = (
+                    from x in dal.Candidates
+                    where x.candidateId.Equals(idCandidate)
+                    select x).ToList<Candidate>();
+
+                    found2[0].status = newStatus;
                     dal.SaveChanges();
                 }
             });
             return View();
         }
+        [HttpPost]
+        public async Task<ActionResult> HireCandidate(string id,string password,string salary, string jobTitle)
+        {
+            await Task.Run(() =>
+            {
+                if (Session["role"] != null)
+                {
 
- 
+
+                    int idCandidate = int.Parse(id);
+                    List<Candidate> found2 = (
+                    from x in dal.Candidates
+                    where x.candidateId.Equals(idCandidate)
+                    select x).ToList<Candidate>();
+                    if (found2.Count > 0)
+                    {
+                        if (password == "")
+                            password = found2[0].candidateId.ToString();
+                        if (jobTitle == "")
+                            jobTitle = "regulaer";
+                        float tempSalary;
+                        if (salary == "")
+                            tempSalary = float.Parse("0");
+                        else
+                            tempSalary = float.Parse(salary);
+                        User temp = new User()
+                        {
+                            userId = found2[0].candidateId,
+                            birtday = found2[0].Birtday,
+                            FirstName = found2[0].firstName,
+                            password = password,
+                            startWork = DateTime.Today,
+                            LastName = found2[0].lastName,
+                            gander = found2[0].gander,
+                            jobTitle = jobTitle,
+                            salary = tempSalary
+                        };
+
+                        dal.users.Add(temp);
+                        dal.SaveChanges();
+                        dal.Candidates.Remove(found2[0]);
+                        dal.SaveChanges();
+                    }
+                }
+
+            });
+            return View();
+        }
+
+        [ChildActionOnly]
+        public ActionResult getmyProfile()
+        {
+            if (Session["role"] != null)
+            {
+                int id = int.Parse(Session["id"].ToString());
+                List<User> result =
+               (from x in dal.users
+                where x.Id.Equals(id)
+                select x).ToList<User>();
+                return PartialView("_profile", result[0]);
+            }
+            return Content("");
+
+        }
+
         [ChildActionOnly]
         public ActionResult getAllCadidates()
         {
@@ -94,10 +145,11 @@ namespace finalProject.Controllers
                 List<Candidate> result =
                (from x in dal.Candidates
                 select x).ToList<Candidate>();
-                return PartialView("CandidatePage", result);
+                return PartialView("_CandidatePage", result);
             }
             return Content("");
         }
+        [HttpPost]
         public ActionResult submitShifts([ModelBinder(typeof(ShiftBinder))] shifts obj)
         {
 
@@ -210,6 +262,8 @@ namespace finalProject.Controllers
         public ActionResult getOptions(string weeknum)
         {
 
+
+
             //finds next sunday for the query
             int start = (int)new DateTime().DayOfWeek;
             int target = (int)DayOfWeek.Sunday;
@@ -239,6 +293,7 @@ namespace finalProject.Controllers
             //loop all weeks
             foreach (tempData y in result)
             {
+
                 string oneperosn = "<tr>";
                 List<string> username =
                 (from x in dal.users

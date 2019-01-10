@@ -17,7 +17,7 @@ namespace finalProject.Models
         public string logInErorMassege { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public char gander { get; set; }
+        public string gander { get; set; }
         public DateTime birtday { get; set; }
         public DateTime startWork { get; set; }
         public DateTime? EndWork { get; set; }

@@ -1,0 +1,151 @@
+﻿@model List<finalProject.Models.Candidate>
+
+@{
+    WebGrid obj = new WebGrid(Model);
+}
+@using (Html.BeginForm())
+{
+
+    @obj.GetHtml(tableStyle: "table table-hover table - striped",
+                htmlAttributes: new { id = "allCandidateTable" },
+                columns: obj.Columns(
+                            obj.Column(header: "Select", format:@<text><input name="chaked" type="checkbox" value="@item.candidateId" /></text>),
+                                                obj.Column(columnName: "candidateId", header: "userId"),
+                                                obj.Column(header: "name", format:@<text> @item.firstName @item.LastName</text>, canSort: false),
+                                                            obj.Column(columnName: "gander", header: "Gander", canSort: false),
+                                                            obj.Column(columnName: "Birtday", header: "Birtday", canSort: false),
+                                                            obj.Column(columnName: "jobTitle", header: "Job", canSort: false),
+                                                            obj.Column(columnName: "status", header: "Status", canSort: false)
+                                                                ))
+}
+<br />
+
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button id="toHireNewCandidate" class="btn btn-primary">hire candadate <span class="badge badge-light"></span></button>
+    <button class="btn btn-danger" id="DeleteCandidate">delete Candadate <span class="badge badge-light"></span></button>
+    <button id="toUpdateCandidate" class="btn btn-primary">update candadate <span class="badge badge-light"></span></button>
+</div>
+
+<table>
+    <tr id="hireNewCandidate">
+        <td><input class="form-control" type="text" id="passWordForNew" placeholder="password" /></td>
+        <td><input class="form-control" type="number" id="salaryhire" placeholder="sallary" /></td>
+        <td>
+            <div class="form-group">
+                <label class="label label-default" for="jobRegistart">select Job </label>
+                <select name="txtJobTitle" id="jobRegistart" required>
+                    <option>select</option>
+                </select>
+            </div>
+        </td>
+        <td>
+            <button button class="btn btn-primary" id="hireNewCandidatesubmit">hire candidate</button>
+        </td>
+    </tr>
+    <tr id="updateCandadateTab">
+        <td><input class="form-control" type="text" id="newStatusUpdate" required/></td>
+        <td><button class="btn btn-primary" id="updateCandidateStatus">update candidate</button></td>
+    </tr>
+</table>
+<p id="statusCandidate"></p>
+
+
+
+
+<script>
+
+$(document).ready(function () {
+
+    $("#hireNewCandidate").hide();
+    $("#updateCandadateTab").hide();
+    $("#toHireNewCandidate").click(function () {
+            if ($("#hireNewCandidate").is(":visible")) {
+                $("#hireNewCandidate").hide();
+            }
+            else {
+                $("#hireNewCandidate").show();
+            }
+    });
+    $("#toUpdateCandidate").click(function () {
+        if ($("#updateCandadateTab").is(":visible")) {
+            $("#updateCandadateTab").hide();
+        }
+        else {
+            $("#updateCandadateTab").show();
+        }
+    });
+
+    $("#DeleteCandidate").click(function () {
+        var toDelete = [];
+        $.each($("input[name='chaked']:checked"), function () {
+            $("#statusCandidate").html("Deleting candidate" + $(this).val());
+            toDelete.push($(this).val());
+            $.post("@Url.Action("deleteCandidate", "Admin")", {
+                id: $(this).val(),
+            },
+                function (data, status) {
+                    debugger;
+                    document.getElementById("statusCandidate").innerHTML = "suseeful in deleting candidate" + $(this).val();
+                });
+            alert("deleted : " + toDelete.join(", "));
+            location.reload();
+        });
+        $("#statusCandidate").html("");
+        location.reload();
+    });
+
+
+     $("#hireNewCandidatesubmit").click(function () {
+            var toHire = [];
+            $.each($("input[name='chaked']:checked"), function () {
+                $("#statusCandidate").html("HireCandadate candidate" + $(this).val());
+                toHire.push($(this).val());
+                $.post("@Url.Action("HireCandidate", "Admin")", {
+                    id: $(this).val(),
+                    password: $("#passWordForNew").val(),
+                    jobTitle: $("#jobRegistart").val(),
+                    salary: $("#salaryhire").val()
+             },
+                    function (data, status) {
+                        document.getElementById("statusCandidate").innerHTML = "suseeful in hiring candidate" + $(this).val();
+                    });
+         });
+         $("#statusCandidate").html("");
+            alert("Hired : " + toHire.join(", "));
+            location.reload();
+    });
+
+
+
+    $("#updateCandidateStatus").click(function () {
+        var toUpdate = [];
+        $.each($("input[name='chaked']:checked"), function () {
+            document.getElementById("statusCandidate").innerHTML = "updating candidate"
+
+            $.post("@Url.Action("updateCandidate", "Admin")", {
+                id: $(this).val(),
+                newStatus: $("#newStatusUpdate").val()
+            },
+                function (data, status) {
+                    document.getElementById("statusCandidate").innerHTML = "suseeful in update candidate"
+                });
+        });
+        $("#statusCandidate").html("");
+        location.reload();
+    });
+
+   
+
+    $.getJSON("@Url.Action("getCandidateJobes", "Candidate")",
+            function (data) {
+                debugger;
+                $.each(data, function (key, value) {
+                    $("#jobRegistart").append($("<option></option>")
+                        .attr("value", value.job)
+                        .text(value.job));
+                });
+    });
+});
+
+</script>
+

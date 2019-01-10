@@ -235,19 +235,18 @@
     <Content Include="Views\Shared\_loginManu.cshtml" />
     <Content Include="Views\Worker\_index.cshtml" />
     <Content Include="Views\Worker\_ShiftForm.cshtml" />
-    <Content Include="Views\Worker\optinsForShifts.cshtml" />
     <Content Include="Views\Worker\profile.cshtml" />
-    <Content Include="Views\Worker\history.cshtml" />
+    <Content Include="Views\Worker\_history.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\_profile.cshtml" />
     <Content Include="Views\Admin\_history.cshtml" />
-    <Content Include="Views\Admin\optinsForShifts.cshtml" />
+    <Content Include="Views\Shared\optinsForShifts.cshtml" />
     <Content Include="Views\Admin\_ShiftForm.cshtml" />
     <Content Include="Views\Admin\shiftsForNextWeek.cshtml" />
     <Content Include="Views\Candidate\_index.cshtml" />
     <Content Include="Views\Candidate\_ChackStatus.cshtml" />
     <Content Include="Views\Candidate\_RegisterForm.cshtml" />
-    <Content Include="Views\Admin\CandidatePage.cshtml" />
+    <Content Include="Views\Admin\_CandidatePage.cshtml" />
     <Content Include="Views\Admin\_workersPage.cshtml" />
   </ItemGroup>
   <ItemGroup>

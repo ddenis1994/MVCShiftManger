@@ -1,30 +1,34 @@
 ﻿@model finalProject.Models.User
 
 <div>
-    <table class="table">
+    <table class="table table-hover table - striped" >
         <tr>
             <td>first name</td>
-            <td>@Session["FirstName"]</td>
+            <td>@Model.FirstName</td>
         </tr>
         <tr>
             <td>last Name</td>
-            <td>@Session["LastName"]</td>
+            <td>@Model.LastName</td>
         </tr>
         <tr>
             <td>id</td>
-            <td>@Session["id"]</td>
+            <td>@Model.userId</td>
         </tr>
         <tr>
             <td>job Title</td>
-            <td>@Session["jobTitle"]</td>
+            <td>@Model.jobTitle</td>
         </tr>
         <tr>
             <td>birthday</td>
-            <td>@Session["birtday"]</td>
+            <td>@Model.birtday</td>
         </tr>
         <tr>
             <td>start of work</td>
-            <td>@Session["startWork"]</td>
+            <td>@Model.startWork</td>
+        </tr>
+        <tr>
+            <td>salery</td>
+            <td>@Model.salary</td>
         </tr>
     </table>
 </div>

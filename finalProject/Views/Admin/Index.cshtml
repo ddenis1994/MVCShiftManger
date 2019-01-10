@@ -26,7 +26,7 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">@Html.Partial("_ShiftForm") </div>
                 <div class="tab-pane" id="history" role="tabpanel" aria-labelledby="history-tab">@Html.Partial("_history")</div>
-                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">@Html.Partial("_profile")</div>
+                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">@{Html.RenderAction("getmyProfile", "admin");}</div>
                 <div class="tab-pane" id="new" role="tabpanel" aria-labelledby="new-tab">@{Html.RenderAction("getAllCadidates", "admin");}</div>
                 <div class="tab-pane" id="all" role="tabpanel" aria-labelledby="all-tub">@{Html.RenderAction("GetAllWorker", "admin");}</div>
                 <div class="tab-pane" id="scudoale" role="tabpanel" aria-labelledby="scuduale-tab">@Html.Partial("shiftsForNextWeek")</div>

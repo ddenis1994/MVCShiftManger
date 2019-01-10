@@ -22,7 +22,7 @@ namespace finalProject.Models
         [Required]
         public int candidateId { get; set; }
         [Required]
-        public char gander { get; set; }
+        public string gander { get; set; }
         [Required]
         public DateTime Birtday { get; set; }
         [Required]

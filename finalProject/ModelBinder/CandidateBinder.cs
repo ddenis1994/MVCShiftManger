@@ -29,7 +29,7 @@ namespace finalProject.ModelBinder
                 candidateId = idstring,
                 firstName = firstNameString,
                 lastName = lastNameStrin,
-                gander = char.Parse(ganderstring),
+                gander = ganderstring,
                 Birtday = DateTime.Parse(birthDayString.Day+"/"+birthDayString.Month+"/"+birthDayString.Year),
                 email = emailString,
                 jobTitle = jobString

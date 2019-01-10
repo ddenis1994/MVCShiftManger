@@ -12,7 +12,6 @@ namespace finalProject.Controllers
 {
     public class WorkerController : Controller
     {
-        //main dal
         private MainDal dal = new MainDal();
         [HttpPost]
         //method for creathing each worker shifts from history
@@ -20,34 +19,20 @@ namespace finalProject.Controllers
         {
             int id = (int)Session["userId"];
             int s = int.Parse(selected);
-
-            List<optinsForweek> realData = new List<optinsForweek>();
-
-            //first find the corract week
             List<shifts> result =
                 (from x in dal.WeekShifts 
                  where x.userId.Equals(id) && x.week.Equals(s)
                  select x).ToList<shifts>();
-            //if got any data on user
             if (result.Count > 0)
             {
-
-                shifts week = new shifts()
-                {
-                    userId = result[0].shiftsId
-                };
-                //get the shift id
                 s = result[0].shiftsId;
-                //get all the shifts
                 List<shifts.shift> l=
                     (from x in dal.Shifts1
                      where x.shiftsId.Equals(s) 
                      select x).ToList<shifts.shift>();
-
                 //creath the table for the user
                 string data = "<table class=\"table table-hover table - striped\">";
                 string temp="<tr>";
-                //put the shifts corractly
                 for (int i = 0; i < l.Count; i++)
                 {
                     DateTime dateTemp = DateTime.Parse(l[i].date);
@@ -56,12 +41,8 @@ namespace finalProject.Controllers
 
                 data += temp+"</tr>";
                 temp = "<tr>";
-                week.shiftList = new List<shifts.shift>();
                 for (int i = 0; i < l.Count; i++)
-                {
-                    week.shiftList.Add(new shifts.shift() { shiftChose = l[i].shiftChose });
                     temp = temp + "<td>" + l[i].shiftChose + "</td>";
-                }
                 data += temp + "</tr></table>";
                 return Content(data);
 
@@ -130,7 +111,7 @@ namespace finalProject.Controllers
                         return View("_Index");
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("_Index");
             }
             return RedirectToAction("index", "home");
         }
