@@ -94,9 +94,13 @@ namespace finalProject.Controllers
                 if (ModelState.IsValid)
                 {
 
+                    DateTime temp1 =DateTime.Parse ( obj.startDate.Value.ToString());
+                    int temp2 = obj.userId;
+
+
                     List<shifts> result =
                     (from x in dal.WeekShifts
-                     where x.startDate.Equals(obj.startDate) && x.userId.Equals(obj.userId)
+                     where x.startDate == temp1 && x.userId== temp2
                      select x).ToList<shifts>();
 
 
@@ -108,10 +112,10 @@ namespace finalProject.Controllers
                     else
                     {
                         ViewBag.eror = "alredy submited for the week";
-                        return View("_Index");
+                        return View("_index");
                     }
                 }
-                return RedirectToAction("_Index");
+                return View("_index");
             }
             return RedirectToAction("index", "home");
         }
@@ -122,7 +126,7 @@ namespace finalProject.Controllers
         //added chach if loged in
         public ActionResult logout()
         {
-            if (Session["id"] != null)
+            if (Session["username"] != null)
             {
                 Session.Clear();
             }

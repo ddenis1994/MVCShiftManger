@@ -1,0 +1,64 @@
+﻿@model List<finalProject.Models.oneWeek>
+
+@{
+    WebGrid obj = new WebGrid(Model);
+}
+
+@using (Html.BeginForm())
+{
+    @obj.GetHtml(tableStyle: "table table-hover table - striped",
+            htmlAttributes: new { id = "allNextWeekWorkers" },
+            columns: obj.Columns(
+                                 obj.Column(columnName: "name", header: "Name", canSort: false),
+                                 obj.Column(header: "Sunday", format:@<text><input class="form-control" type="text" value="@item.Sunday" /></text>),
+                                 obj.Column(header: "Monday", format:@<text><input class="form-control" type="text" value="@item.Monday" /></text>),
+                                 obj.Column(header: "Tuesday", format:@<text><input class="form-control" type="text" value="@item.Tuesday" /></text>),
+                                 obj.Column(header: "Wensday", format:@<text><input class="form-control" type="text"  value="@item.Wensday" /></text>),
+                                 obj.Column(header: "Thursday", format:@<text><input class="form-control" type="text"  value="@item.Thursday" /></text>),
+                                 obj.Column(header: "Friday", format:@<text><input class="form-control" type="text" value="@item.Friday" /></text>),
+                                 obj.Column(header: "Saturday", format:@<text><input class="form-control" type="text" value="@item.Saturday" /></text>),
+                                 obj.Column(format: @<input class="hide" type="hidden" name="IDHidden" value="@item.WorkerId"/>)
+                                      ))
+    <button class="btn btn-primary"  id="updateShifts">Update Shifts</button>
+    <p id="updateWeek" style="color:red"></p>
+}
+
+
+
+    <script>
+    @*add some style for the table *@
+        $(document).ready(function () {
+
+            $("#allNextWeekWorkers thead tr:first").addClass('thead-dark');
+            $("#updateShifts").click(function () {
+                $('#allNextWeekWorkers tbody tr').each(function (i, row) {
+                    $("#updateWeek").html("updating " + $(this).find("td:eq(8)").find(".hide").val());
+                    debugger;
+                    var week = {
+                        Sunday: $(this).find("td:eq(1)").find(".form-control").val(),
+                        Monday: $(this).find("td:eq(2)").find(".form-control").val(),
+                        Tuesday: $(this).find("td:eq(3)").find(".form-control").val(),
+                        Wensday: $(this).find("td:eq(4)").find(".form-control").val(),
+                        Thursday: $(this).find("td:eq(5)").find(".form-control").val(),
+                        Friday: $(this).find("td:eq(6)").find(".form-control").val(),
+                        Saturday: $(this).find("td:eq(7)").find(".form-control").val(),
+                        Saturday: $(this).find("td:eq(7)").find(".form-control").val(),
+                        WorkerId: $(this).find("td:eq(8)").find(".hide").val(),
+                    };
+                    $.post("@Url.Action("updateWeek", "Admin")", week ,
+                        function (data, status) {
+
+                            $("#updateWeek").html(data);
+                        });
+                });
+                debugger;
+                $("#updateWeek").html("update all week");
+                location.reload();
+            });
+        });
+
+    </script>    
+
+
+
+

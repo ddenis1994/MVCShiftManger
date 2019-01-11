@@ -25,6 +25,8 @@ namespace finalProject.ModelBinder
             string th = objcontex.Request.Form["Thursday"];
             string fr = objcontex.Request.Form["Friday"];
             string sa = objcontex.Request.Form["Saturday"];
+            if (date == "")
+                date = DateTime.Today.ToString();
             DateTime parsedDate = DateTime.Parse(date);
             int start = (int)parsedDate.DayOfWeek;
             int target = (int)DayOfWeek.Sunday;
@@ -51,7 +53,7 @@ namespace finalProject.ModelBinder
             shiftlist.Add(new shifts.shift() { date = (nextS.AddDays(6)).ToString(), shiftChose = sa });
             shifts obj = new shifts()
             {
-                startDate = nextS.ToString(),
+                startDate = nextS,
                 year = nextS.Year,
                 userId = userId,
                 week= weeknum,

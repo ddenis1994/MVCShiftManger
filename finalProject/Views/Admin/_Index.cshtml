@@ -29,7 +29,7 @@
                 <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">@{Html.RenderAction("getmyProfile", "admin");}</div>
                 <div class="tab-pane" id="new" role="tabpanel" aria-labelledby="new-tab">@{Html.RenderAction("getAllCadidates", "admin");}</div>
                 <div class="tab-pane" id="all" role="tabpanel" aria-labelledby="all-tub">@{Html.RenderAction("GetAllWorker", "admin");}</div>
-                <div class="tab-pane" id="scudoale" role="tabpanel" aria-labelledby="scuduale-tab">@Html.Partial("shiftsForNextWeek")</div>
+                <div class="tab-pane" id="scudoale" role="tabpanel" aria-labelledby="scuduale-tab">@{Html.RenderAction("getOptions", "admin");}</div>
 
             </div>
         </div>

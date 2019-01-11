@@ -18,8 +18,10 @@ namespace finalProject.Dal
             modelBuilder.Entity<shifts.shift>().ToTable("Shifts1TBL");
             modelBuilder.Entity<User>().ToTable("UserTBL");
             modelBuilder.Entity<shifts>().ToTable("WeelShiftsTBL");
+            
 
         }
+        
 
 
 

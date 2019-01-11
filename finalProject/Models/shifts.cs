@@ -19,7 +19,7 @@ namespace finalProject.Models
         }
         [Key]
         public int shiftsId { get; set; }
-        public string startDate { get; set; }
+        public DateTime? startDate { get; set; }
         public int week { get; set; }
         public int year { get; set; }
         public int userId { get; set; }

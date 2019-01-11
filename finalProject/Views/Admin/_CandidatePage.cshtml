@@ -27,7 +27,7 @@
 </div>
 
 <table>
-    <tr id="hireNewCandidate">
+        <tr id="hireNewCandidate">
         <td><input class="form-control" type="text" id="passWordForNew" placeholder="password" /></td>
         <td><input class="form-control" type="number" id="salaryhire" placeholder="sallary" /></td>
         <td>
@@ -138,7 +138,6 @@ $(document).ready(function () {
 
     $.getJSON("@Url.Action("getCandidateJobes", "Candidate")",
             function (data) {
-                debugger;
                 $.each(data, function (key, value) {
                     $("#jobRegistart").append($("<option></option>")
                         .attr("value", value.job)

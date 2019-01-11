@@ -19,7 +19,134 @@ namespace finalProject.Controllers
     public class AdminController : Controller
     {
         private MainDal dal = new MainDal();
-        
+
+        [HttpPost]
+        public async Task<ActionResult> MakeAdmin(string id)
+        {
+            await Task.Run(() =>
+            {
+                if (Session["role"].ToString() == "admin")
+                {
+                    int serch = int.Parse(id);
+                    roles newAdmin = new roles()
+                    {
+                        userid = serch,
+                        role = "admin"
+                    };
+                    dal.roles.Add(newAdmin);
+                    dal.SaveChanges();
+                }
+                return Json(new { status = "success" });
+            });
+
+
+            return Content("");
+    }
+
+
+
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeJobTitle(string id, string jobTitle)
+        {
+
+            await Task.Run(() =>
+            {
+                if (Session["role"].ToString() == "admin")
+                {
+
+                    int serch = int.Parse(id);
+                    List<User> result = (
+                   from x in dal.users
+                   where x.userId.Equals(serch)
+                   select x).ToList<User>();
+                    result[0].jobTitle = jobTitle;
+                    dal.SaveChanges();
+                }
+                return Json(new
+                {
+                    status = "success"
+                });
+            });
+
+            return Json(new
+            {
+                status = "filed"
+            });
+        }
+
+        [HttpPost]
+        //mathod for updating worer salary
+        public async Task<ActionResult> updateSalary(string id,string newSalry)
+        {
+            await Task.Run(() =>
+            {
+                int serch = int.Parse(id);
+                List<User> result = (
+               from x in dal.users
+               where x.userId.Equals(serch)
+               select x).ToList<User>();
+                if (newSalry == "")
+                    newSalry = "30";
+                result[0].salary = int.Parse(newSalry);
+                dal.SaveChanges();
+                return Json(new
+                {
+                    data = "success in updating salary for" + result[0].userId,
+                    status = "success"
+                });
+            });
+            return Json(new {
+                data = "cannot update salary for" + id,
+                status = "filed"
+            });
+        }
+        [HttpPost]
+        public async Task<ActionResult> fireWorker(string id)
+        {
+            await Task.Run(() =>
+            {
+                int serch = int.Parse(id);
+                List<User> result = (
+                    from x in dal.users
+                    where x.userId.Equals(serch)
+                    select x).ToList<User>();
+                result[0].EndWork = DateTime.Today;
+                dal.SaveChanges();
+            });
+            return Content("");
+        }
+
+        public async Task<ActionResult> updateWeek(oneWeek obj)
+        {
+            await Task.Run(() =>
+            {
+                List<shifts> shiftFound = (
+                from x in dal.WeekShifts
+                where x.userId.Equals(obj.WorkerId)
+                select x).ToList<shifts>();
+
+                int serchValue = shiftFound[0].shiftsId;
+
+                List<shifts.shift> week = (
+                    from x in dal.Shifts1
+                    where x.shiftsId.Equals(serchValue)
+                    select x).ToList<shifts.shift>();
+                week[0].shiftChose = obj.Sunday;
+                week[1].shiftChose = obj.Monday;
+                week[2].shiftChose = obj.Tuesday;
+                week[3].shiftChose = obj.Wensday;
+                week[4].shiftChose = obj.Thursday;
+                week[5].shiftChose = obj.Friday;
+                week[6].shiftChose = obj.Saturday;
+
+                shiftFound[0].shiftList = week;
+                dal.SaveChanges();
+                return Json(new { data = "finised update worker"+ obj.name, status = "success" });
+            });
+            return Json(new { data = "sql eror conction", status = "fail" });
+        }
+
         //finshid aget all working personal
         [ChildActionOnly]
         public ActionResult GetAllWorker()
@@ -81,10 +208,9 @@ namespace finalProject.Controllers
                 {
 
 
-                    int idCandidate = int.Parse(id);
                     List<Candidate> found2 = (
                     from x in dal.Candidates
-                    where x.candidateId.Equals(idCandidate)
+                    where x.candidateId.Equals(id)
                     select x).ToList<Candidate>();
                     if (found2.Count > 0)
                     {
@@ -99,7 +225,8 @@ namespace finalProject.Controllers
                             tempSalary = float.Parse(salary);
                         User temp = new User()
                         {
-                            userId = found2[0].candidateId,
+                            Id = found2[0].candidateId,
+                            username= found2[0].candidateId,
                             birtday = found2[0].Birtday,
                             FirstName = found2[0].firstName,
                             password = password,
@@ -126,17 +253,16 @@ namespace finalProject.Controllers
         {
             if (Session["role"] != null)
             {
-                int id = int.Parse(Session["id"].ToString());
+                int id = int.Parse(Session["userId"].ToString());
                 List<User> result =
                (from x in dal.users
-                where x.Id.Equals(id)
+                where x.userId.Equals(id)
                 select x).ToList<User>();
                 return PartialView("_profile", result[0]);
             }
             return Content("");
 
         }
-
         [ChildActionOnly]
         public ActionResult getAllCadidates()
         {
@@ -153,14 +279,14 @@ namespace finalProject.Controllers
         public ActionResult submitShifts([ModelBinder(typeof(ShiftBinder))] shifts obj)
         {
 
-            if (Session["id"] != null)
+            if (Session["role"] != null)
             {
                 //chackif got this shift
                 if (ModelState.IsValid)
                 {
                     List<shifts> result =
                     (from x in dal.WeekShifts
-                     where x.startDate.Equals(obj.startDate) && x.userId.Equals(obj.userId)
+                     where x.startDate==obj.startDate && x.userId== obj.userId
                      select x).ToList<shifts>();
 
 
@@ -172,14 +298,14 @@ namespace finalProject.Controllers
                     else
                     {
                         User obj2 = new User();
-                        obj2.logInErorMassege = "alredy submited for the week";
-                        return View("Index", obj2);
+                        ViewBag.eror = "alredy submited for the week";
+                        return View("_index", obj2);
                     }
 
                 }
             }
 
-            return View("Index");
+            return View("_index");
         }
         public ActionResult getdates()
         {
@@ -257,12 +383,12 @@ namespace finalProject.Controllers
             if (Session["role"] == null || (string)Session["role"]!="admin")
                 return RedirectToAction("index", "Home"); 
             User obj = new User();
-            return View(obj);
+            return View("_index",obj);
         }
         public ActionResult getOptions(string weeknum)
         {
 
-
+            List<oneWeek> weekly = new List<oneWeek>();
 
             //finds next sunday for the query
             int start = (int)new DateTime().DayOfWeek;
@@ -293,6 +419,7 @@ namespace finalProject.Controllers
             //loop all weeks
             foreach (tempData y in result)
             {
+                oneWeek temp = new oneWeek();
 
                 string oneperosn = "<tr>";
                 List<string> username =
@@ -302,6 +429,9 @@ namespace finalProject.Controllers
                  ).ToList<string>();
                 if (username.Count > 0)
                 {
+                    //test
+                    temp.name = username[0];
+                    temp.WorkerId = y.userId;
                     //add thr user name
                     oneperosn += "<td>"+username[0]+"</td>";
                 }
@@ -312,6 +442,18 @@ namespace finalProject.Controllers
                  where x.shiftsId.Equals(y.weekId)
                  select x.shiftChose
                  ).ToList<string>();
+
+                //test
+                temp.Sunday = shifts[0];
+                temp.Monday = shifts[1];
+                temp.Tuesday = shifts[2];
+                temp.Wensday = shifts[3];
+                temp.Thursday = shifts[4];
+                temp.Friday = shifts[5];
+                temp.Saturday = shifts[6];
+                weekly.Add(temp);
+
+
                 foreach (string shiftsnum in shifts)
                 {
                     oneperosn += "<td>" + shiftsnum + "</td>";
@@ -320,7 +462,7 @@ namespace finalProject.Controllers
                 data += oneperosn;
             }
             data += "</table></form>";
-            return Content(data);
+            return PartialView("_shiftsForNextWeek", weekly);
         }
        
    
@@ -330,19 +472,5 @@ namespace finalProject.Controllers
         public int weekId { get; set; }
         public int userId { get; set; }
     }
-    public class oneWeek
-    {
-        public int WorkerId { get; set; }
-        public string name { get; set; }
-        public string Sunday { get; set; }
-        public string Monday { get; set; }
-        public string Tuesday { get; set; }
-        public string Wensday { get; set; }
-        public string Thursday { get; set; }
-        public string Friday { get; set; }
-        public int Saturday { get; set; }
 
-
-
-    }
 }

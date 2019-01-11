@@ -76,10 +76,9 @@ namespace finalProject.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    int find = int.Parse(statusString);
                     List<Candidate> result= 
                     (from x in dal.Candidates
-                    where x.candidateId.Equals(find)
+                    where x.candidateId.Equals(statusString)
                     select x).ToList<Candidate>();
 
                     if (result.Count > 0)

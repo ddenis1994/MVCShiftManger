@@ -1,22 +1,145 @@
 ﻿@model List<finalProject.Models.User>
-    @{ 
-        WebGrid obj = new WebGrid(Model);
-    }
-@obj.GetHtml(tableStyle: "table table-hover table - striped",
-    htmlAttributes:  new { id = "allActiveWorkerTable" },
-    columns: obj.Columns(
-        obj.Column(columnName: "userId", header: "UserId"),
-        obj.Column( header: "name",format:@<text> @item.username @item.LastName </text>, canSort:false),
-        obj.Column(columnName: "gander", header: "Gander", canSort: false),
-        obj.Column(columnName: "birtday", header: "Birtday", canSort: false),
-        obj.Column(columnName: "startWork", header: "StartWork", canSort: false),
-        obj.Column(columnName: "jobTitle", header: "Job", canSort: false)
-    ));
+@{
+    WebGrid obj = new WebGrid(Model);
+}
+@using (Html.BeginForm())
+{
+
+    @obj.GetHtml(tableStyle: "table table-hover table - striped",
+            htmlAttributes: new { id = "allActiveWorkerTable" },
+            columns: obj.Columns(
+                obj.Column(header: "Select", format:@<text><input name="chaked" type="checkbox" value="@item.UserId" /></text>),
+                            obj.Column(columnName: "Id", header: "UserId"),
+                            obj.Column(header: "name", format:@<text> @item.FirstName @item.LastName </text>, canSort: false),
+                                        obj.Column(columnName: "gander", header: "Gander", canSort: false),
+                                        obj.Column(columnName: "birtday", header: "Birtday", canSort: false),
+                                        obj.Column(columnName: "startWork", header: "StartWork", canSort: false),
+                                        obj.Column(columnName: "jobTitle", header: "Job", canSort: false),
+                                        obj.Column(columnName: "salary", header: "Salary", canSort: false)
+                                    ))
+}
+<div class="btn-group" role="group" aria-label="Basic example">
+    <button id="toChangeSalary" class="btn btn-primary">Change Salary <span class="badge badge-light"></span></button>
+    <button class="btn btn-danger" id="toFireWorker">Fire Worker <span class="badge badge-light"></span></button>
+    <button id="toChangeJob" class="btn btn-primary">Change job<span class="badge badge-light"></span></button>
+     <button id="toMakeAdmin" class="btn btn-danger">Make Admin<span class="badge badge-light"></span></button>
+
+</div>
+<table>
+    <tr id="ChangeSalaryWorker">
+        <td><input class="form-control" type="text" id="NewSalaryWorker" placeholder="Salary" /></td>
+        <td>
+            <button button class="btn btn-primary" id="updateSalaryWorker">Update Salary</button>
+        </td>
+    </tr>
+    <tr id="ChangeJobTitleWorker">
+        <td>
+            <div class="form-group">
+                <label class="label label-default" for="jobRegistart">select Job </label>
+                <select name="txtJobTitle" id="jobWorkerUpdate" required>
+                    <option>select</option>
+                </select>
+            </div>
+        </td>
+        <td><button button class="btn btn-primary" id="ChangeWorkerJob">Change Job</button></td>
+    </tr>
+</table>
+
+
 <script>
-    @*add some style for the table *@
-      $(document).ready(function () {
-        $("#allActiveWorkerTable thead tr:first").addClass('thead-dark');
+
+    
+
+
+
+
+    $(document).ready(function () {
+        $("#ChangeWorkerJob").click(function () {
+            var toUpdate = [];
+            debugger;
+        $.each($("input[name='chaked']:checked"), function () {
+            $.post("@Url.Action("ChangeJobTitle", "Admin")", {
+                id: $(this).val(),
+                jobTitle: $("#jobWorkerUpdate").val()
+            },
+                function (data, status) {
+                });
+        });
+        location.reload();
         });
 
- 
+         $("#toMakeAdmin").click(function () {
+            var toUpdate = [];
+            debugger;
+        $.each($("input[name='chaked']:checked"), function () {
+            $.post("@Url.Action("MakeAdmin", "Admin")", {
+                id: $(this).val()
+            },
+                function (data, status) {
+                });
+        });
+        location.reload();
+        });
+
+
+        $("#ChangeSalaryWorker").hide();
+        $("#ChangeJobTitleWorker").hide();
+        $("#toChangeSalary").click(function () {
+            if ($("#ChangeSalaryWorker").is(":visible")) {
+                $("#ChangeSalaryWorker").hide();
+            }
+            else {
+                $("#ChangeSalaryWorker").show();
+            }
+        });
+
+        $("#toChangeJob").click(function () {
+            if ($("#ChangeJobTitleWorker").is(":visible")) {
+                $("#ChangeJobTitleWorker").hide();
+            }
+            else {
+                $("#ChangeJobTitleWorker").show();
+            }
+        });
+
+        $("#allActiveWorkerTable thead tr:first").addClass('thead-dark');
+
+        $.getJSON("@Url.Action("getCandidateJobes", "Candidate")",
+            function (data) {
+                $.each(data, function (key, value) {
+                    $("#jobWorkerUpdate").append($("<option></option>")
+                        .attr("value", value.job)
+                        .text(value.job));
+                });
+    });
+
+        $("#toFireWorker").click(function () {
+            var toUpdate = [];
+            debugger;
+        $.each($("input[name='chaked']:checked"), function () {
+            $.post("@Url.Action("fireWorker", "Admin")", {
+                id: $(this).val(),
+            },
+                function (data, status) {
+                });
+        });
+        location.reload();
+        });
+
+        $("#updateSalaryWorker").click(function () {
+            var toUpdate = [];
+            debugger;
+        $.each($("input[name='chaked']:checked"), function () {
+            $.post("@Url.Action("updateSalary", "Admin")", {
+                id: $(this).val(),
+                newSalry: $("#NewSalaryWorker").val()
+            },
+                function (data, status) {
+                });
+        });
+        location.reload();
+        });
+
+
+        });
 </script>

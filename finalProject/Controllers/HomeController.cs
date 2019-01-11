@@ -39,9 +39,10 @@ namespace finalProject.Controllers
                     Session["FirstName"] = users[0].FirstName;
                     Session["LastName"] = users[0].LastName;
                     Session["jobTitle"] = users[0].jobTitle;
-                    Session["startWork"] = users[0].startWork.Date;
-                    Session["birtday"] = users[0].birtday.Date;
+                    Session["startWork"] = users[0].startWork.ToString();
+                    Session["birtday"] = users[0].birtday.ToString();
                     Session["salary"] = users[0].salary;
+
 
                     int ss = users[0].userId;
                     List<roles> r =

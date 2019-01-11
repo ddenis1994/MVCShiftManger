@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace finalProject.Models
 {
-    public class optinsForweek
+    public class oneWeek
     {
-        public string username { get; set; }
-        [Key]
-        public int userId { get; set; }
+        public int WorkerId { get; set; }
+        public string name { get; set; }
+
         public string Sunday { get; set; }
         public string Monday { get; set; }
         public string Tuesday { get; set; }
@@ -18,5 +17,6 @@ namespace finalProject.Models
         public string Thursday { get; set; }
         public string Friday { get; set; }
         public string Saturday { get; set; }
+
     }
 }

@@ -12,7 +12,7 @@ namespace finalProject.ModelBinder
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             HttpContextBase objContex = controllerContext.HttpContext;
-            int idstring = int.Parse(objContex.Request.Form["txtIdEnter"]);
+            string idstring = objContex.Request.Form["txtIdEnter"];
             string firstNameString = objContex.Request.Form["txtFirstName"];
             string lastNameStrin = objContex.Request.Form["txtLastName"];
             string ganderstring = objContex.Request.Form["txtGander"];

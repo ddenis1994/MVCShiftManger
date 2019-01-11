@@ -20,11 +20,11 @@ namespace finalProject.Models
         [Required]
         public int Id { get; set; }
         [Required]
-        public int candidateId { get; set; }
+        public string candidateId { get; set; }
         [Required]
         public string gander { get; set; }
         [Required]
-        public DateTime Birtday { get; set; }
+        public DateTime? Birtday { get; set; }
         [Required]
         public string status { get; set; }
     }
